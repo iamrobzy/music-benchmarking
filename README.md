@@ -1,5 +1,9 @@
-# Project directory structure
+# Music Task Benchmarking
 
+There exists no standardized platform to compare models for music-tagging and genre-classification - so we create a platform ourselves.
+
+## Project directory structure
+```
 music-benchmarking/
 ├── .gitignore                  # Specify files/folders to be ignored by Git
 ├── README.md                   # Project overview and instructions
@@ -50,3 +54,4 @@ music-benchmarking/
 └── docs/                       # Documentation
     ├── setup_guide.md          # Setup and installation guide
     └── usage_guide.md          # Usage instructions for the platform
+```
