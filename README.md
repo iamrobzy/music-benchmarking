@@ -1,10 +1,9 @@
 <!-- PROJECT LOGO -->
 <a id="readme-top"></a>
-<br />
-  <h3 align="center">Music-Tagging and Genre-Classification Platform</h3>
-  <p align="center">
-    A platform for evaluating music-tagging and genre-classification models
-  </p>
+<h3 align="center">Music-Tagging and Genre-Classification Platform</h3>
+<p align="center">
+  A platform for evaluating music-tagging and genre-classification models
+</p>
 </div>
 
 <!-- TABLE OF CONTENTS -->
