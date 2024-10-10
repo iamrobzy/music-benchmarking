@@ -12,24 +12,22 @@
   <summary>Table of Contents</summary>
   <ol>
     <li><a href="#about-the-project">About The Project</a></li>
-    <li><a href="#built-with">Built With</a></li>
+    <li><a href="#folder-structure">Folder Structure</a></li>
     <li><a href="#getting-started">Getting Started</a></li>
     <ul>
       <li><a href="#prerequisites">Prerequisites</a></li>
       <li><a href="#installation">Installation</a></li>
     </ul>
     <li><a href="#usage">Usage</a></li>
-    <li><a href="#folder-structure">Folder Structure</a></li>
+    
     <li><a href="#roadmap">Roadmap</a></li>
     <li><a href="#contributing">Contributing</a></li>
-    <li><a href="#license">License</a></li>
     <li><a href="#contact">Contact</a></li>
-    <li><a href="#acknowledgments">Acknowledgments</a></li>
   </ol>
 </details>
 
 <!-- ABOUT THE PROJECT -->
-## About The Project
+## Project Details
 
 This platform addresses the lack of standardized comparison tools for music-tagging and genre-classification models. It allows users to upload and evaluate models using different datasets.
 
@@ -37,36 +35,6 @@ Key features:
 - Upload and evaluate music models using a user-friendly interface.
 - Fine-tune and test various models, including AST, Audio Mamba, and more.
 - Repository of popular music information retrieval datasets.
-
-<!-- GETTING STARTED -->
-## Getting Started
-
-To set up this project locally, follow these steps:
-
-### Prerequisites
-* Python 3.x
-* Install dependencies:
-  ```sh
-  pip install -r requirements.txt
-  ```
-
-### Installation
-1. Clone the repo
-   ```sh
-   git clone git@github.com:iamrobzy/music-benchmarking.git
-   ```
-2. Install required packages
-   ```sh
-   pip install -r requirements.txt
-   ```
-3. Set up environment variables or API keys if necessary.
-
-<!-- USAGE EXAMPLES -->
-## Usage
-
-This platform provides a UI to upload models, select datasets, and evaluate model performance. It supports the evaluation of different pre-trained models, with options for fine-tuning.
-
-Explain here how to start.
 
 <!-- FOLDER STRUCTURE -->
 ## Folder Structure
@@ -121,6 +89,36 @@ music-benchmarking/
 
 ```
 
+<!-- GETTING STARTED -->
+## Getting Started
+
+To set up this project locally, follow these steps:
+
+### Prerequisites
+* Python 3.x
+* Install dependencies:
+  ```sh
+  pip install -r requirements.txt
+  ```
+
+### Installation
+1. Clone the repo
+   ```sh
+   git clone git@github.com:iamrobzy/music-benchmarking.git
+   ```
+2. Install required packages
+   ```sh
+   pip install -r requirements.txt
+   ```
+3. Set up environment variables or API keys if necessary.
+
+<!-- USAGE EXAMPLES -->
+## Usage
+
+This platform provides a UI to upload models, select datasets, and evaluate model performance. It supports the evaluation of different pre-trained models, with options for fine-tuning.
+
+Explain here how to start.
+
 <!-- ROADMAP -->
 ## Roadmap
 
@@ -148,13 +146,3 @@ Contributors:
 - Robert Skoglund
 - Wang Jiyu
 - Michalina Janik
-
-<!-- ACKNOWLEDGMENTS -->
-## Acknowledgments
-
-* [Gradio](https://www.gradio.app/)
-* [HuggingFace](https://huggingface.co/)
-* [GitHub Pages](https://pages.github.com)
-
-
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
