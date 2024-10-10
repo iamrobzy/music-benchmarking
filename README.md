@@ -35,6 +35,12 @@ Key features:
 - Fine-tune and test various models, including AST, Audio Mamba, and more.
 - Repository of popular music information retrieval datasets.
 
+## Datasets
+
+- [Free Music Archive (FMA)](https://github.com/mdeff/fma?tab=readme-ov-file)
+- [MTG-Jamendo Dataset](https://github.com/MTG/mtg-jamendo-dataset)
+
+
 <!-- FOLDER STRUCTURE -->
 ## Folder Structure
 
