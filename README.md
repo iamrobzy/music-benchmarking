@@ -1,4 +1,5 @@
 <!-- PROJECT LOGO -->
+<a id="readme-top"></a>
 <br />
 
   <h3 align="center">Music-Tagging and Genre-Classification Platform</h3>
@@ -182,8 +183,6 @@ Project Link: [https://github.com/github_username/repo_name](https://github.com/
 * [Gradio](https://www.gradio.app/)
 * [HuggingFace](https://huggingface.co/)
 * [GitHub Pages](https://pages.github.com)
-* [Img Shields](https://shields.io
 
-)
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
