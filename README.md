@@ -1,9 +1,17 @@
 <!-- PROJECT LOGO -->
 <a id="readme-top"></a>
+<<<<<<< HEAD
 <h3 align="center">Music-Tagging and Genre-Classification Platform</h3>
 <p align="center">
   A platform for evaluating music-tagging and genre-classification models
 </p>
+=======
+<br />
+  <h3 align="center">Music-Tagging and Genre-Classification Platform</h3>
+  <p align="center">
+    A platform for evaluating music-tagging and genre-classification models
+  </p>
+>>>>>>> 19d8f54 (added folder structure)
 </div>
 
 <!-- TABLE OF CONTENTS -->
