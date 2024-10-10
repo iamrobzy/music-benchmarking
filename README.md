@@ -42,14 +42,6 @@ Key features:
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
-### Built With
-
-* [Python](https://www.python.org/)
-* [Gradio](https://www.gradio.app/)
-* [HuggingFace](https://huggingface.co/)
-
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
-
 <!-- GETTING STARTED -->
 ## Getting Started
 
@@ -65,7 +57,7 @@ To set up this project locally, follow these steps:
 ### Installation
 1. Clone the repo
    ```sh
-   git clone https://github.com/github_username/repo_name.git
+   git clone git@github.com:iamrobzy/music-benchmarking.git
    ```
 2. Install required packages
    ```sh
@@ -80,7 +72,7 @@ To set up this project locally, follow these steps:
 
 This platform provides a UI to upload models, select datasets, and evaluate model performance. It supports the evaluation of different pre-trained models, with options for fine-tuning.
 
-For more examples, refer to the [Documentation](https://example.com).
+Explain here how to start.
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -149,8 +141,6 @@ music-tagging-genre-classification-platform/
 - [ ] Implement support for more models
 - [ ] Add dataset preprocessing modules
 
-See the [open issues](https://github.com/github_username/repo_name/issues) for a full list of proposed features (and known issues).
-
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 <!-- CONTRIBUTING -->
@@ -171,9 +161,11 @@ Contributions are what make the open source community such an amazing place to l
 <!-- CONTACT -->
 ## Contact
 
-Your Name - [@your_twitter](https://twitter.com/your_username) - email@example.com
-
-Project Link: [https://github.com/github_username/repo_name](https://github.com/github_username/repo_name)
+Contributors:
+- Adrian Pang
+- Robert Skoglund
+- Wang Jiyu
+- Michalina Janik
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
