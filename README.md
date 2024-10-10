@@ -40,8 +40,6 @@ Key features:
 - Fine-tune and test various models, including AST, Audio Mamba, and more.
 - Repository of popular music information retrieval datasets.
 
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
-
 <!-- GETTING STARTED -->
 ## Getting Started
 
@@ -65,16 +63,12 @@ To set up this project locally, follow these steps:
    ```
 3. Set up environment variables or API keys if necessary.
 
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
-
 <!-- USAGE EXAMPLES -->
 ## Usage
 
 This platform provides a UI to upload models, select datasets, and evaluate model performance. It supports the evaluation of different pre-trained models, with options for fine-tuning.
 
 Explain here how to start.
-
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 <!-- FOLDER STRUCTURE -->
 ## Folder Structure
@@ -132,8 +126,6 @@ music-tagging-genre-classification-platform/
     └── usage_guide.md          # Usage instructions for the platform
 ```
 
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
-
 <!-- ROADMAP -->
 ## Roadmap
 
@@ -141,7 +133,6 @@ music-tagging-genre-classification-platform/
 - [ ] Implement support for more models
 - [ ] Add dataset preprocessing modules
 
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 <!-- CONTRIBUTING -->
 ## Contributing
@@ -154,10 +145,6 @@ Contributions are what make the open source community such an amazing place to l
 4. Push to the Branch (`git push origin feature/AmazingFeature`)
 5. Open a Pull Request
 
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
-
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
-
 <!-- CONTACT -->
 ## Contact
 
@@ -166,8 +153,6 @@ Contributors:
 - Robert Skoglund
 - Wang Jiyu
 - Michalina Janik
-
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 <!-- ACKNOWLEDGMENTS -->
 ## Acknowledgments
