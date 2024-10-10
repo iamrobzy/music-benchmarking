@@ -74,7 +74,7 @@ Explain here how to start.
 ## Folder Structure
 
 ```
-music-tagging-genre-classification-platform/
+music-benchmarking/
 ├── .gitignore                  # Specify files/folders to be ignored by Git
 ├── README.md                   # Project overview and instructions
 ├── LICENSE                     # License information
@@ -120,10 +120,7 @@ music-tagging-genre-classification-platform/
 │       ├── train_gnn.py
 │       ├── finetune_gnn.py
 │       └── config_gnn.yaml
-│
-└── docs/                       # Documentation
-    ├── setup_guide.md          # Setup and installation guide
-    └── usage_guide.md          # Usage instructions for the platform
+
 ```
 
 <!-- ROADMAP -->
