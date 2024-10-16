@@ -51,10 +51,10 @@ music-benchmarking/
 ├── LICENSE                     # License information
 ├── requirements.txt            # Python dependencies
 ├── setup.py                    # Setup script for package installation
-├── ui/                         # User Interface components
-│   ├── app.py                  # Main application script
-│   ├── templates/              # HTML templates for the UI
-│   └── static/                 # Static files (CSS, JS, images)
+├── app/                        # Application components
+│   ├── backend/                # Backend implementation with Flask
+│   ├── frontend/               # Frontend implementation with React
+│   └── README.md               # Instructions on how to run the app
 │
 ├── datasets/                   # Datasets for model evaluation
 │   ├── README.md               # Overview of datasets used
