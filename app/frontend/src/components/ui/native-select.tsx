@@ -34,7 +34,7 @@ export const NativeSelectField = forwardRef<
   HTMLSelectElement,
   NativeSelectField
 >(function NativeSelectField(props, ref) {
-  const { items: itemsProp, children } = props
+  const { items: itemsProp, children, value, onChange } = props
 
   const items = useMemo(
     () =>
@@ -45,7 +45,7 @@ export const NativeSelectField = forwardRef<
   )
 
   return (
-    <Select.Field ref={ref}>
+    <Select.Field ref={ref} value={value} onChange={onChange}>
       {children}
       {items?.map((item) => (
         <option key={item.value} value={item.value} disabled={item.disabled}>
