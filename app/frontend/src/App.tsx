@@ -50,7 +50,7 @@ const App: React.FC = () => {
 
   return (
     <ChakraProvider value={defaultSystem}>
-        <Box height="100vh" width="100vw" className="dark">
+        <Box height="100vh" width="100vw">
             <Flex height="100%" width="100%">
                 <Box position="fixed" width="100%" bg="black" color="white" padding="10px">
                     <Flex align="center" justify="space-between">
@@ -81,7 +81,7 @@ const App: React.FC = () => {
                         </Flex>
                     </Flex>
                 </Box>
-                <Box padding="20px" marginTop="60px" width="100%" height="calc(100% - 60px)">
+                <Box marginTop="60px" width="100%" height="calc(100% - 60px)">
                     {selectedPage === 'about' && <AboutPage />}
                     {selectedPage === 'benchmarkedModels' && <BenchmarkPage />}
                     {selectedPage === 'outputComparison' && <OutputCompPage />}

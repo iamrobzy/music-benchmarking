@@ -60,6 +60,9 @@ const BenchmarkPage: React.FC = () => {
     const [checkedMetrics, setCheckedMetrics] = useState<string[]>(range(metrics.length));
     const handleMetricsChange = (values: string[]) => {
         setCheckedMetrics(values);
+        if (values.length > 0) {
+            setSortSelection(values[0]);
+        }
     }
 
     const [checkedModels, setCheckedModels] = useState<string[]>(range(models.length));
@@ -95,7 +98,7 @@ const BenchmarkPage: React.FC = () => {
             .scaleBand()
             .domain(labels)
             .range([0, width])
-            .padding(0.2);
+            .padding(0.25);
 
         const xAxis = d3
             .axisBottom(xScale);
@@ -177,10 +180,11 @@ const BenchmarkPage: React.FC = () => {
 
     return (
     <Box height="100%" width="100%" justifyContent="center" alignContent="center">
-        {/* <Heading size="xl" marginBottom={10}>Benchmarked Models</Heading> */}
-        <Flex padding={30}>
-            <svg ref={svgRef} width={width} height={height}></svg>
-            <Box padding={10}>
+        <Flex padding="50px">
+            <Box padding="10px 0">
+                <svg ref={svgRef} width={width} height={height}></svg>
+            </Box>
+            <Box padding="20px" margin="0 auto">
                 <Box marginBottom={10}>
                     <Heading size="md" marginBottom={3}>Metrics</Heading>
                     <CheckboxGroup value={checkedMetrics} onValueChange={handleMetricsChange}>
