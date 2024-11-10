@@ -4,7 +4,7 @@ import { Box, Heading } from "@chakra-ui/react";
 const AboutPage: React.FC = () => {
     return (
     <Box>
-        <Heading size="lg">About</Heading>
+        <Heading size="lg">Output Comparison</Heading>
         <p>About</p>
     </Box>
     )

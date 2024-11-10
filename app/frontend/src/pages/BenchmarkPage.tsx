@@ -1,7 +1,10 @@
 import React, { ChangeEvent, useEffect, useRef, useState } from "react";
-import { Box, Checkbox, CheckboxGroup, Flex, Heading, Select, SimpleGrid, Stack } from "@chakra-ui/react";
 import * as d3 from "d3";
 import Color from "colorjs.io";
+import { Box, CheckboxGroup, Flex, Heading, SimpleGrid } from "@chakra-ui/react";
+import { Checkbox } from "../components/ui/checkbox";
+import { NativeSelectField, NativeSelectRoot } from "../components/ui/native-select";
+// import { Checkbox } from "./components/ui/checkbox";
 
 function range(size: number) {
     const result = []
@@ -52,7 +55,7 @@ const BenchmarkPage: React.FC = () => {
 
     const width = 800;
     const height = 500;
-    const padding = 10;
+    const padding = 20;
 
     const [checkedMetrics, setCheckedMetrics] = useState<string[]>(range(metrics.length));
     const handleMetricsChange = (values: string[]) => {
@@ -138,8 +141,8 @@ const BenchmarkPage: React.FC = () => {
                     return result;
                 })
                 .style('display', 'block')
-                .style('left', (event.pageX + 28) + 'px')     
-                .style('top', (event.pageY - 28) + 'px');
+                .style('left', (event.pageX + 25) + 'px')     
+                .style('top', (event.pageY - 25) + 'px');
 
                 d3.select(this).selectAll("rect")
                     .attr("fill", (_, i) => hoverColors[metricToColorIndex.get(sublabels[i]) || 0]);
@@ -173,32 +176,34 @@ const BenchmarkPage: React.FC = () => {
 
 
     return (
-    <Box height="100%">
-        <Heading size="lg" marginBottom={10}>Benchmarked Models</Heading>
-        <Flex>
+    <Box height="100%" width="100%" justifyContent="center" alignContent="center">
+        {/* <Heading size="xl" marginBottom={10}>Benchmarked Models</Heading> */}
+        <Flex padding={30}>
             <svg ref={svgRef} width={width} height={height}></svg>
             <Box padding={10}>
                 <Box marginBottom={10}>
-                    <Heading size="sm" marginBottom={3}>Metrics</Heading>
-                    <CheckboxGroup value={checkedMetrics} onChange={handleMetricsChange}>
-                        <SimpleGrid columns={2} spacing={5}>
+                    <Heading size="md" marginBottom={3}>Metrics</Heading>
+                    <CheckboxGroup value={checkedMetrics} onValueChange={handleMetricsChange}>
+                        <SimpleGrid columns={2} gap={5}>
                             {metrics.map((m, i) => <Checkbox value={i.toString()}>{m}</Checkbox>)}
                         </SimpleGrid>
                     </CheckboxGroup>
                 </Box>
                 <Box marginBottom={10}>
-                    <Heading size="sm" marginBottom={3}>Models</Heading>
-                    <CheckboxGroup value={checkedModels} onChange={handleModelsChange}>
-                        <SimpleGrid columns={2} spacing={5}>
+                    <Heading size="md" marginBottom={3}>Models</Heading>
+                    <CheckboxGroup value={checkedModels} onValueChange={handleModelsChange}>
+                        <SimpleGrid columns={2} gap={5}>
                             {models.map((m, i) => <Checkbox value={i.toString()}>{m}</Checkbox>)}
                         </SimpleGrid>
                     </CheckboxGroup>
                 </Box>
                 <Box>
-                    <Heading size="sm" marginBottom={3}>Sort by</Heading>
-                    <Select value={sortSelection} onChange={handleSortChange}>
-                        {checkedMetrics.map((m) => <option value={m}>{metrics[Number(m)]}</option>)}
-                    </Select>
+                    <Heading size="md" marginBottom={3}>Sort by</Heading>
+                    <NativeSelectRoot>
+                        <NativeSelectField value={sortSelection} onChange={handleSortChange}>
+                            {checkedMetrics.map((m) => <option value={m}>{metrics[Number(m)]}</option>)}
+                        </NativeSelectField>
+                    </NativeSelectRoot>
                 </Box>
             </Box>
         </Flex>
