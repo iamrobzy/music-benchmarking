@@ -44,7 +44,7 @@ const NavBar: React.FC = () => {
     return (
     <Box position="fixed" width="100%" bg="black" color="white" padding="10px">
         <Flex alignItems="center">
-            { (windowWidth > 850) && <Heading marginLeft="10px" size="2xl">Music Tagging Benchmarker</Heading>}
+            { (windowWidth > 850) && <Heading marginLeft="10px" size="2xl" style={{userSelect: "none"}}>Music Tagging Benchmarker</Heading>}
             <Flex marginLeft="auto">
                 <Link to="/">
                     <StyledButton

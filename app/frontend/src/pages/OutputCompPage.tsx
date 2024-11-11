@@ -5,6 +5,12 @@ import { Button } from "../components/ui/button";
 import { ProgressCircleRing, ProgressCircleRoot } from "../components/ui/progress-circle";
 import * as d3 from "d3";
 
+type InferenceData = {
+    data: number[][];
+    models: string[];
+    labels: string[];
+}
+
 const AboutPage: React.FC = () => {
     enum PageState {
         Input = 0,
@@ -13,6 +19,8 @@ const AboutPage: React.FC = () => {
     }
 
     const [ data, setData ] = useState<number[][]>([]);
+    const [ models, setModels ] = useState<string[]>([]);
+    const [ labels, setLabels ] = useState<string[]>([]);
     const [ pageState, setPageState ] = useState<PageState>(PageState.Input);
     const [ file, setFile ] = useState<File>();
     const [ isSubmitError, setSubmitError ] = useState<boolean>(false);
@@ -23,19 +31,27 @@ const AboutPage: React.FC = () => {
         setSubmitError(false);
     };
 
-    const handleSubmit = () => {
+    const handleSubmit = async () => {
         if (file === undefined) {
             setSubmitError(true);
         } else {
             setPageState(PageState.Loading);
-            // TODO: replace with API call
-            setData([
-                [0.3, 0.4, 0.6, 0.1, 0.3, 0.4, 0.6, 0.1],
-                [0.1, 0.9, 0.4, 0.05, 0.1, 0.9, 0.4, 0.05],
-                [0.1, 0.5, 0.3, 0.01, 0.1, 0.5, 0.3, 0.01],
-                [0.4, 0.8, 0.6, 0.2, 0.4, 0.8, 0.6, 0.2],
-                [0.06, 0.6, 0.1, 0.07, 0.06, 0.6, 0.1, 0.07]
-            ]);
+
+            // Create a FormData object to send the file
+            const formData = new FormData();
+            formData.append('file', file);
+
+            // Make the POST request
+            const response = await fetch('http://localhost:8080/api/inference', {
+                method: 'POST',
+                body: formData,  // The FormData will automatically set the correct Content-Type
+            })
+            
+            const payload: InferenceData = await response.json();
+            setData(payload["data"]);
+            setModels(payload["models"]);
+            setLabels(payload["labels"]);
+
             setTimeout(() => {
                 setPageState(PageState.Output);
             }, 1000);
@@ -45,41 +61,6 @@ const AboutPage: React.FC = () => {
     const handleRetry = () => {
         setPageState(PageState.Input);
     };
-
-    const InputPage = () => {
-        return (
-        <Box width="100%" height="100%" padding="50px" justifyItems="center" alignContent="center" marginTop="-30px">
-            <Heading size="2xl" marginBottom="50px">Audio Upload</Heading>
-            <Box marginBottom="20px">
-                <FileUploadRoot accept={"audio/mpeg"} onFileAccept={handleFileAccept}>
-                    <FileUploadDropzone 
-                        label="Drag and drop here to upload"
-                        description=".mp3 files only"
-                    />
-                    <FileUploadList files={file ? [file] : []}/>
-                </FileUploadRoot>
-            </Box>
-            {isSubmitError && <Text color="red" fontSize="sm">Please submit a valid audio file</Text>}
-            <Button size="xl" marginTop="20px" onClick={handleSubmit}>Submit</Button>
-        </Box>
-        );
-    };
-
-    const LoadingPage = () => {
-        return (
-        <Box borderWidth="5px" width="100%" height="100%" justifyItems="center" alignContent="center">
-            <Box>
-                <ProgressCircleRoot value={null} size="lg" >
-                    <ProgressCircleRing cap="round" />
-                </ProgressCircleRoot>
-            </Box>
-        </Box>
-        );
-    };
-
-    
-    
-    const labels = ["CNN", "CNN-2", "Audio-Mamba", "AST", "UserModel"]
 
     const svgRefs = useRef<SVGSVGElement[]>([]);
 
@@ -136,15 +117,84 @@ const AboutPage: React.FC = () => {
         }
     };
 
+    const getIndexOfMax = (arr: number[]) => {
+        if (arr.length === 1) {
+            return 0;
+        }
+
+        let max = arr[0];
+        let maxIndex = 0;
+        for (let i = 1; i < arr.length; i++) {
+            if (arr[i] > max) {
+                max = arr[i];
+                maxIndex = i;
+            }
+        }
+
+        return maxIndex;
+    }
+
+    const getGenre = () => {
+        // Get max of each model
+        const maxes = data.map(getIndexOfMax);
+
+        const count = new Map<number, number>();
+        for (const m of maxes) {
+            count.set(m, (count.get(m) || 0) + 1);
+        }
+
+        let maxKey = 0;
+        let maxCount = 0;
+        for (const [k, v] of count) {
+            if (v > maxCount) {
+                maxKey = k;
+                maxCount = v;
+            }
+        }
+
+        return labels[maxKey];
+    }
+
+    const InputPage = () => {
+        return (
+        <Box width="100%" height="100%" padding="50px" justifyItems="center" alignContent="center" marginTop="-30px">
+            <Heading size="2xl" marginBottom="50px">Audio Upload</Heading>
+            <Box marginBottom="20px">
+                <FileUploadRoot accept={"audio/mpeg"} onFileAccept={handleFileAccept}>
+                    <FileUploadDropzone 
+                        label="Drag and drop here to upload"
+                        description=".mp3 files only"
+                    />
+                    <FileUploadList files={file ? [file] : []}/>
+                </FileUploadRoot>
+            </Box>
+            {isSubmitError && <Text color="red" fontSize="sm">Please submit a valid audio file</Text>}
+            <Button size="xl" marginTop="20px" onClick={handleSubmit}>Submit</Button>
+        </Box>
+        );
+    };
+
+    const LoadingPage = () => {
+        return (
+        <Box borderWidth="5px" width="100%" height="100%" justifyItems="center" alignContent="center">
+            <Box>
+                <ProgressCircleRoot value={null} size="lg" >
+                    <ProgressCircleRing cap="round" />
+                </ProgressCircleRoot>
+            </Box>
+        </Box>
+        );
+    };
+
     const OutputPage = () => {
         return (
             <Box padding="35px" justifyItems="center">
                 <Heading size="2xl" marginBottom="20px">Results</Heading>
-                <Flex justifyContent="center" wrap="wrap" marginBottom="10px">
+                <Flex maxWidth="1000px" justifyContent="center" wrap="wrap" marginBottom="10px">
                     {data.map((_, i) => {
                         return (
                             <Box padding="15px" margin="10px" justifyItems="center" border="1px solid grey">
-                                <Heading size="md">{labels[i]}</Heading>
+                                <Heading size="md">{models[i]}</Heading>
                                 <svg ref={(r) => { if (r) svgRefs.current[i] = r; renderGraphs()}}></svg>
                             </Box>
                         );
@@ -152,7 +202,7 @@ const AboutPage: React.FC = () => {
                 </Flex>
                 <Flex alignItems="baseline" marginBottom="20px">
                     <Text fontSize="lg" fontWeight="medium" marginRight="6px">The most popular genre is:</Text>
-                    <Text fontSize="xl" fontWeight="bold">Rock</Text>
+                    <Text fontSize="xl" fontWeight="bold">{getGenre()}</Text>
                 </Flex>
                 <Button onClick={handleRetry}>Try Another Song</Button>
             </Box>

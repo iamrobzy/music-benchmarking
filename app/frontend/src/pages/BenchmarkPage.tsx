@@ -4,6 +4,13 @@ import Color from "colorjs.io";
 import { Box, CheckboxGroup, Flex, Heading, SimpleGrid } from "@chakra-ui/react";
 import { Checkbox } from "../components/ui/checkbox";
 import { NativeSelectField, NativeSelectRoot } from "../components/ui/native-select";
+import { ProgressCircleRing, ProgressCircleRoot } from "../components/ui/progress-circle";
+
+type BenchmarkingData = {
+    data: number[][];
+    models: string[];
+    metrics: string[];
+}
 
 function range(size: number) {
     const result = []
@@ -32,47 +39,65 @@ const BenchmarkPage: React.FC = () => {
     const LG_FONTSIZE = "16px";
     const SM_FONTSIZE = "12px";
     const PADDING = 25;
-    const SM_THRESHOLD = 1150;
+    const MD_THRESHOLD = 1150;
+    const SM_THRESHOLD = 900;
 
     const [ windowWidth, setWindowWidth ] = useState<number>(window.innerWidth);
-    const [ isSmallWindow, setSmallWindow ] = useState<boolean>(windowWidth <= SM_THRESHOLD);
+    const [ isLoading, setLoading ] = useState<boolean>(true);
     const updateSize = () => {
-        setWindowWidth(window.innerWidth);
-        if (isSmallWindow && windowWidth > SM_THRESHOLD) {
-            setSmallWindow(false);
-        } else if (!isSmallWindow && windowWidth <= SM_THRESHOLD) {
-            setSmallWindow(true);
-        }
+        setTimeout(() => { setWindowWidth(window.innerWidth); }, 200);
     };
 
     window.addEventListener('resize', updateSize);
 
-    const svgRef = useRef<SVGSVGElement | null>(null);
-    // TODO: API call to backend -> useEffect(getData(), [])
-    // Should retrieve a dictionary of model name to all metrics and a list of metric names
-    const payload = {
-        data: {
-            "CNN": [.99, .89, .9],
-            "CNN-2": [.97, .79, .85],
-            "AudioMamba": [.94, .3, .65],
-            "AST": [.95, .92, .92],
-            "UserModel": [.6, .3, .45],
-        },
-        metrics: ["Accuracy", "Precision", "AOC"]
-    }
 
-    // TODO: normalize values?
-    const data = Object.values(payload["data"]);
-    const models = Object.keys(payload["data"]);
-    const metrics: string[] = payload["metrics"];
     const colors = ["#4394E5", "#87BB62", "#CA6469", "#876FD4", "#F5921B", "#E0E0E0"];
     const hoverColors = colors.map(c => darken(c));
-    const metricToColorIndex = new Map<string, number>();
-    for (let i = 0; i < metrics.length; i++) {
-        metricToColorIndex.set(metrics[i], i);
-    }
+    const [ payload, setPayload ] = useState<BenchmarkingData>();
+    const [ data, setData ] = useState<number[][]>();
+    const [ models, setModels ] = useState<string[]>([]);
+    const [ metrics, setMetrics ] = useState<string[]>([]);
+    const [ metricToColorIndex, setMetricToColorIndex] = useState<Map<string, number>>(new Map());
+    useEffect(() => {
+        async function getPayload() {
+            const response = await fetch("http://127.0.0.1:8080/api/benchmarking");
+            if (!response.ok) {
+                throw new Error(`Response status: ${response.status}`);
+              }
+          
+            const payload = await response.json();
+            setPayload(payload);
+        }
 
-    const [checkedMetrics, setCheckedMetrics] = useState<string[]>(range(metrics.length));
+        getPayload();
+    }, []);
+
+    useEffect(() => {
+        if (payload) {
+            setData(payload["data"]);
+            setModels(Object.values(payload["models"]));
+            setMetrics(Object.values(payload["metrics"]));
+        }
+    }, [payload]);
+
+    useEffect(() => {
+        setCheckedMetrics(range(metrics.length));
+        const map = new Map<string, number>();
+
+        for (let i = 0; i < metrics.length; i++) {
+            map.set(metrics[i], i);
+        }
+
+        setMetricToColorIndex(map);
+    }, [metrics])
+
+    useEffect(() => {
+        setCheckedModels(range(models.length));
+    }, [models])
+    
+    const svgRef = useRef<SVGSVGElement | null>(null);
+    
+    const [checkedMetrics, setCheckedMetrics] = useState<string[]>([]);
     const handleMetricsChange = (values: string[]) => {
         setCheckedMetrics(values);
         if (values.length > 0) {
@@ -80,7 +105,7 @@ const BenchmarkPage: React.FC = () => {
         }
     }
 
-    const [checkedModels, setCheckedModels] = useState<string[]>(range(models.length));
+    const [checkedModels, setCheckedModels] = useState<string[]>([]);
     const handleModelsChange = (values: string[]) => {
         setCheckedModels(values);
     }
@@ -91,9 +116,13 @@ const BenchmarkPage: React.FC = () => {
     }
 
     useEffect(() => {
-        const width = isSmallWindow ? SM_WIDTH : LG_WIDTH;
-        const height = isSmallWindow ? SM_HEIGHT : LG_HEIGHT;
-        const fontSize = isSmallWindow ? SM_FONTSIZE : LG_FONTSIZE;
+        if (!data) {
+            return;
+        };
+        
+        const width = (windowWidth <= MD_THRESHOLD) ? SM_WIDTH : LG_WIDTH;
+        const height = (windowWidth <= MD_THRESHOLD) ? SM_HEIGHT : LG_HEIGHT;
+        const fontSize = (windowWidth <= MD_THRESHOLD) ? SM_FONTSIZE : LG_FONTSIZE;
         const svg = d3.select(svgRef.current);
         svg.selectAll("*").remove(); // Clear previous chart elements if re-rendered
     
@@ -105,7 +134,7 @@ const BenchmarkPage: React.FC = () => {
         const labels = modelIndices.map((i) => models[Number(i)]);
 
         // Get selected sublabels (metrics as indices)
-        const metricIndices = checkedMetrics.sort(); //TODO
+        const metricIndices = checkedMetrics.sort();
         const sublabels = metricIndices.map((i) => metrics[Number(i)]);
         
         // Filter data 
@@ -200,44 +229,52 @@ const BenchmarkPage: React.FC = () => {
             .attr("transform", `translate(${PADDING}, ${PADDING})`)
             .call(yAxis);
 
-      }, [checkedMetrics, checkedModels, sortSelection, isSmallWindow]);
-
+        setLoading(false);
+      }, [checkedMetrics, checkedModels, sortSelection, windowWidth]);
 
     return (
-    <Box height="100%" width="100%" justifyContent="center" alignContent="center">
-        <Flex padding="50px">
-            <Box padding="10px 0">
-                <svg ref={svgRef}>
-                </svg>
+        <>
+            <Box display={isLoading ? "none" : "block"} height="100%" width="100%" justifyContent="center" alignContent="center">
+                <Flex direction={(windowWidth < SM_THRESHOLD) ? "column" : "row"} padding="50px">
+                    <Box padding="10px 0" alignSelf="center">
+                        <svg ref={svgRef}></svg>
+                    </Box>
+                    <Box padding="20px" margin="0 auto">
+                        <Box marginBottom={10}>
+                            <Heading size="md" marginBottom={3}>Metrics</Heading>
+                            <CheckboxGroup value={checkedMetrics} onValueChange={handleMetricsChange}>
+                                <SimpleGrid columns={2} gap={5}>
+                                    {metrics.map((m, i) => <Checkbox value={i.toString()}>{m}</Checkbox>)}
+                                </SimpleGrid>
+                            </CheckboxGroup>
+                        </Box>
+                        <Box marginBottom={10}>
+                            <Heading size="md" marginBottom={3}>Models</Heading>
+                            <CheckboxGroup value={checkedModels} onValueChange={handleModelsChange}>
+                                <SimpleGrid columns={2} gap={5}>
+                                    {models.map((m, i) => <Checkbox value={i.toString()}>{m}</Checkbox>)}
+                                </SimpleGrid>
+                            </CheckboxGroup>
+                        </Box>
+                        <Box>
+                            <Heading size="md" marginBottom={3}>Sort by</Heading>
+                            <NativeSelectRoot>
+                                <NativeSelectField value={sortSelection} onChange={handleSortChange}>
+                                    {checkedMetrics.map((m) => <option value={m}>{metrics[Number(m)]}</option>)}
+                                </NativeSelectField>
+                            </NativeSelectRoot>
+                        </Box>
+                    </Box>
+                </Flex>
             </Box>
-            <Box padding="20px" margin="0 auto">
-                <Box marginBottom={10}>
-                    <Heading size="md" marginBottom={3}>Metrics</Heading>
-                    <CheckboxGroup value={checkedMetrics} onValueChange={handleMetricsChange}>
-                        <SimpleGrid columns={2} gap={5}>
-                            {metrics.map((m, i) => <Checkbox value={i.toString()}>{m}</Checkbox>)}
-                        </SimpleGrid>
-                    </CheckboxGroup>
-                </Box>
-                <Box marginBottom={10}>
-                    <Heading size="md" marginBottom={3}>Models</Heading>
-                    <CheckboxGroup value={checkedModels} onValueChange={handleModelsChange}>
-                        <SimpleGrid columns={2} gap={5}>
-                            {models.map((m, i) => <Checkbox value={i.toString()}>{m}</Checkbox>)}
-                        </SimpleGrid>
-                    </CheckboxGroup>
-                </Box>
+            <Box display={isLoading ? "block" : "none"}borderWidth="5px" width="100%" height="100%" justifyItems="center" alignContent="center">
                 <Box>
-                    <Heading size="md" marginBottom={3}>Sort by</Heading>
-                    <NativeSelectRoot>
-                        <NativeSelectField value={sortSelection} onChange={handleSortChange}>
-                            {checkedMetrics.map((m) => <option value={m}>{metrics[Number(m)]}</option>)}
-                        </NativeSelectField>
-                    </NativeSelectRoot>
+                    <ProgressCircleRoot value={null} size="lg" >
+                        <ProgressCircleRing cap="round" />
+                    </ProgressCircleRoot>
                 </Box>
             </Box>
-        </Flex>
-    </Box>
+        </>
     )
 };
 
