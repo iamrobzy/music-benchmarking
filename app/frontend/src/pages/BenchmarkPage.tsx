@@ -4,7 +4,6 @@ import Color from "colorjs.io";
 import { Box, CheckboxGroup, Flex, Heading, SimpleGrid } from "@chakra-ui/react";
 import { Checkbox } from "../components/ui/checkbox";
 import { NativeSelectField, NativeSelectRoot } from "../components/ui/native-select";
-// import { Checkbox } from "./components/ui/checkbox";
 
 function range(size: number) {
     const result = []
@@ -25,11 +24,31 @@ function darken(color: string) {
     return newColor.toString({format: "hex"});
 }
 
-
-
 const BenchmarkPage: React.FC = () => {
+    const LG_WIDTH = 700;
+    const SM_WIDTH = 500;
+    const LG_HEIGHT = 450;
+    const SM_HEIGHT = 350;
+    const LG_FONTSIZE = "16px";
+    const SM_FONTSIZE = "12px";
+    const PADDING = 25;
+    const SM_THRESHOLD = 1150;
+
+    const [ windowWidth, setWindowWidth ] = useState<number>(window.innerWidth);
+    const [ isSmallWindow, setSmallWindow ] = useState<boolean>(windowWidth <= SM_THRESHOLD);
+    const updateSize = () => {
+        setWindowWidth(window.innerWidth);
+        if (isSmallWindow && windowWidth > SM_THRESHOLD) {
+            setSmallWindow(false);
+        } else if (!isSmallWindow && windowWidth <= SM_THRESHOLD) {
+            setSmallWindow(true);
+        }
+    };
+
+    window.addEventListener('resize', updateSize);
+
     const svgRef = useRef<SVGSVGElement | null>(null);
-    // API call to backend
+    // TODO: API call to backend -> useEffect(getData(), [])
     // Should retrieve a dictionary of model name to all metrics and a list of metric names
     const payload = {
         data: {
@@ -42,7 +61,7 @@ const BenchmarkPage: React.FC = () => {
         metrics: ["Accuracy", "Precision", "AOC"]
     }
 
-    // normalize values?
+    // TODO: normalize values?
     const data = Object.values(payload["data"]);
     const models = Object.keys(payload["data"]);
     const metrics: string[] = payload["metrics"];
@@ -52,10 +71,6 @@ const BenchmarkPage: React.FC = () => {
     for (let i = 0; i < metrics.length; i++) {
         metricToColorIndex.set(metrics[i], i);
     }
-
-    const width = 800;
-    const height = 500;
-    const padding = 20;
 
     const [checkedMetrics, setCheckedMetrics] = useState<string[]>(range(metrics.length));
     const handleMetricsChange = (values: string[]) => {
@@ -76,6 +91,9 @@ const BenchmarkPage: React.FC = () => {
     }
 
     useEffect(() => {
+        const width = isSmallWindow ? SM_WIDTH : LG_WIDTH;
+        const height = isSmallWindow ? SM_HEIGHT : LG_HEIGHT;
+        const fontSize = isSmallWindow ? SM_FONTSIZE : LG_FONTSIZE;
         const svg = d3.select(svgRef.current);
         svg.selectAll("*").remove(); // Clear previous chart elements if re-rendered
     
@@ -115,17 +133,19 @@ const BenchmarkPage: React.FC = () => {
             .domain([0, d3.max(data[0]) || 0])
             .range([0, height]);
     
-        const yAxis = d3.axisLeft(yScale);
+        const yAxis = d3.axisLeft(yScale).tickValues([]);;
 
-        svg.attr("height", height + 2 * padding);
+        svg
+            .attr("height", height + 2 * PADDING)
+            .attr("width", width + 2 * PADDING);
+        
         d3.select('body').append('div')   
             .attr('class', 'tooltip') 
             .style('position', 'absolute')
             .style('display', 'none')
             .style('background-color', "white")
             .style('padding', "5px")
-            .style('border', "1px solid black")
-
+            .style('border', "1px solid black");            
 
         // Create bars
         svg
@@ -133,7 +153,7 @@ const BenchmarkPage: React.FC = () => {
             .data(filteredData)
             .enter()
             .append("g")
-            .attr("transform", (_, i) => `translate(${xScale(labels[i])})`)
+            .attr("transform", (_, i) => `translate(${(xScale(labels[i]) || 0) + PADDING})`)
             .on("mouseover", function(event, d) {
                 d3.select(".tooltip")
                 .html(() => {
@@ -145,7 +165,8 @@ const BenchmarkPage: React.FC = () => {
                 })
                 .style('display', 'block')
                 .style('left', (event.pageX + 25) + 'px')     
-                .style('top', (event.pageY - 25) + 'px');
+                .style('top', (event.pageY - 25) + 'px')
+                .style('font-size', fontSize);
 
                 d3.select(this).selectAll("rect")
                     .attr("fill", (_, i) => hoverColors[metricToColorIndex.get(sublabels[i]) || 0]);
@@ -162,7 +183,7 @@ const BenchmarkPage: React.FC = () => {
             .append("rect")
                 .attr("class", "bar")
                 .attr("x", (_, i) => xSubscale(sublabels[i]) || 0)
-                .attr("y", (d) => height - yScale(d))
+                .attr("y", (d) => height - yScale(d) + PADDING)
                 .attr("width", xSubscale.bandwidth())
                 .attr("height", (d) => yScale(d))
                 .attr("fill", (_, i) => colors[metricToColorIndex.get(sublabels[i]) || 0]);
@@ -170,19 +191,24 @@ const BenchmarkPage: React.FC = () => {
         // Add axes
         svg
           .append("g")
-          .attr("transform", `translate(0, ${height})`)
-          .call(xAxis);
+          .attr("transform", `translate(${PADDING}, ${height + PADDING})`)
+          .call(xAxis)
+          .style("font-size", fontSize);
     
-        svg.append("g").call(yAxis);
+        svg
+            .append("g")
+            .attr("transform", `translate(${PADDING}, ${PADDING})`)
+            .call(yAxis);
 
-      }, [checkedMetrics, checkedModels, sortSelection]);
+      }, [checkedMetrics, checkedModels, sortSelection, isSmallWindow]);
 
 
     return (
     <Box height="100%" width="100%" justifyContent="center" alignContent="center">
         <Flex padding="50px">
             <Box padding="10px 0">
-                <svg ref={svgRef} width={width} height={height}></svg>
+                <svg ref={svgRef}>
+                </svg>
             </Box>
             <Box padding="20px" margin="0 auto">
                 <Box marginBottom={10}>
