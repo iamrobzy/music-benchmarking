@@ -2,10 +2,12 @@ import io
 from benchmarking import get_benchmarking_payload
 from inference import get_inference_payload
 from flask import Flask, jsonify, send_from_directory, request
+import os
 
 app = Flask(__name__, static_folder='../frontend/dist', static_url_path='')
-app.config['MAX_CONTENT_LENGTH'] = 5 * 1000 * 1000
-app.config['ALLOWED_EXTENSIONS'] = {'mp3'}  # Allow specific file types
+app.config['MAX_CONTENT_LENGTH'] = 10 * 1000 * 1000
+app.config['UPLOAD_FOLDER'] = './audio_uploads'
+app.config['ALLOWED_EXTENSIONS'] = {'wav'}  # Allow specific file types
 
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in app.config['ALLOWED_EXTENSIONS']
@@ -34,11 +36,11 @@ def get_inference():
         return jsonify({'error': 'No selected file'}), 400
     
     if file and allowed_file(file.filename):
-        file_content = file.read()
-        audio_stream = io.BytesIO(file_content)
+        filepath = os.path.join(app.config['UPLOAD_FOLDER'], file.filename)
+        file.save(filepath)
     
     
-    response = jsonify(get_inference_payload(audio_stream))
+    response = jsonify(get_inference_payload(filepath))
     response.headers.add('Access-Control-Allow-Origin', '*')
     return response
 

@@ -1,6 +1,22 @@
+def get_inference_payload(audio_pathname):
+    # model_data = some_api_call()
+    # data = []
 
-def get_inference_payload(audio_stream):
-    # TODO: Send audio stream to models
+    # maps index to model name
+    # e.g. if models[0] is "CNN", data[0] should be the probability distribution for the "CNN" model
+    # models = []
+
+    # maps index to label name 
+    # e.g. if labels[0] is "Rock", data[i][0] should be softmax value for "Rock" of model i
+    # labels = []  
+
+
+    # TODO: Uncomment when function is complete
+    # return {
+    #             "data": data,
+    #             "models": models,
+    #             "labels": labels
+    #         }
     return {
                 "data": [
                     [0.3, 0.4, 0.6, 0.1, 0.3, 0.4, 0.6, 0.1],
