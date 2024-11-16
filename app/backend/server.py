@@ -1,4 +1,3 @@
-import io
 from benchmarking import get_benchmarking_payload
 from inference import get_inference_payload
 from flask import Flask, jsonify, send_from_directory, request
