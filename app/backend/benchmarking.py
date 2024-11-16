@@ -23,8 +23,8 @@ def get_benchmarking_payload():
     # TODO: Calculate metrics from predictions and test data stored on disk
     return {
         "data": [
-            [.99, .89, .9],
-            [.97, .79, .85],
+            [.99, .89, .9], # the Accuracy, Precision, and AOC of CNN
+            [.97, .79, .85], # the Accuracy, Precision, and AOC of CNN-2
             [.94, .3, .65],
             [.95, .92, .92],
             [.6, .3, .45],

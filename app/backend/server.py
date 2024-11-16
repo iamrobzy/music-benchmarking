@@ -5,9 +5,9 @@ from flask import Flask, jsonify, send_from_directory, request
 import os
 
 app = Flask(__name__, static_folder='../frontend/dist', static_url_path='')
-app.config['MAX_CONTENT_LENGTH'] = 10 * 1000 * 1000
+app.config['MAX_CONTENT_LENGTH'] = 20 * 1000 * 1000
 app.config['UPLOAD_FOLDER'] = './audio_uploads'
-app.config['ALLOWED_EXTENSIONS'] = {'wav'}  # Allow specific file types
+app.config['ALLOWED_EXTENSIONS'] = {'mp3','wav'}  # Allow specific file types
 
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in app.config['ALLOWED_EXTENSIONS']

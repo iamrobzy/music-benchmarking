@@ -51,7 +51,7 @@ const BenchmarkPage: React.FC = () => {
     window.addEventListener('resize', updateSize);
 
 
-    const colors = ["#4394E5", "#87BB62", "#CA6469", "#876FD4", "#F5921B", "#E0E0E0"];
+    const colors = ["#4394E5", "#87BB62", "#CA6469", "#876FD4", "#F5921B", "#BE8178", "#65A8A4", "#AD9D60"];
     const hoverColors = colors.map(c => darken(c));
     const [ payload, setPayload ] = useState<BenchmarkingData>();
     const [ data, setData ] = useState<number[][]>();
@@ -100,7 +100,7 @@ const BenchmarkPage: React.FC = () => {
     const [checkedMetrics, setCheckedMetrics] = useState<string[]>([]);
     const handleMetricsChange = (values: string[]) => {
         setCheckedMetrics(values);
-        if (values.length > 0) {
+        if (!checkedMetrics.includes(sortSelection || "") && values.length > 0) {
             setSortSelection(values[0]);
         }
     }

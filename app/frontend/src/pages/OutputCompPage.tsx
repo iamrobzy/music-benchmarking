@@ -18,7 +18,7 @@ const AboutPage: React.FC = () => {
         Output,
     }
 
-    const MAX_FILE_MB = 10;
+    const MAX_FILE_MB = 20;
 
     const [ data, setData ] = useState<number[][]>([]);
     const [ models, setModels ] = useState<string[]>([]);
@@ -167,10 +167,10 @@ const AboutPage: React.FC = () => {
         <Box width="100%" height="100%" padding="50px" justifyItems="center" alignContent="center" marginTop="-30px">
             <Heading size="2xl" marginBottom="50px">Audio Upload</Heading>
             <Box marginBottom="20px">
-                <FileUploadRoot accept={["audio/wav"]} onFileAccept={handleFileAccept}>
+                <FileUploadRoot accept={["audio/mpeg", "audio/wav"]} onFileAccept={handleFileAccept}>
                     <FileUploadDropzone 
                         label="Drag and drop here to upload"
-                        description={`.wav files only (max ${MAX_FILE_MB} MB)`}
+                        description={`.mp3 and .wav files only (max ${MAX_FILE_MB} MB)`}
                     />
                     <FileUploadList files={file ? [file] : []}/>
                 </FileUploadRoot>
