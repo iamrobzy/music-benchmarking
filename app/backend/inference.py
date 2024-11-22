@@ -1,8 +1,21 @@
+import requests
+import io
+import os
+
 def get_inference_payload(audio_pathname):
+
+    # Uploading to modal
+    # remote_name = 'audiofile'
+    # os.system(f'modal volume put music_dir {audio_pathname} {remote_name}')
+    # url = 'https://iamrobzy-inference--inference-api-infer-all-models.modal.run'
+    # res = requests.post(url=url)
+    # return output
+
+
     # model_data = some_api_call()
     # data = []
 
-    # maps index to model name
+    # maps index to model namemo
     # e.g. if models[0] is "CNN", data[0] should be the probability distribution for the "CNN" model
     # models = []
 
@@ -17,6 +30,9 @@ def get_inference_payload(audio_pathname):
     #             "models": models,
     #             "labels": labels
     #         }
+
+    ### Dummy output
+
     return {
                 "data": [
                     [0.3, 0.4, 0.6, 0.1, 0.3, 0.4, 0.6, 0.1], # probability of each label for "CNN"

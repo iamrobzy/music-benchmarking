@@ -36,9 +36,11 @@ def get_inference():
     
     if file and allowed_file(file.filename):
         filepath = os.path.join(app.config['UPLOAD_FOLDER'], file.filename)
+        if not os.path.exists(app.config['UPLOAD_FOLDER']):
+            os.makedirs(app.config['UPLOAD_FOLDER'])
         file.save(filepath)
     
-    
+       
     response = jsonify(get_inference_payload(filepath))
     response.headers.add('Access-Control-Allow-Origin', '*')
     return response

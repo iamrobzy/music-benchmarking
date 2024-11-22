@@ -1,6 +1,0 @@
-torch
-librosa
-onnx
-onnxruntime
-numpy
-modal
